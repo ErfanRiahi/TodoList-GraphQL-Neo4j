@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "./style.css";
 
 export const LoginPage = () => {
@@ -12,6 +13,9 @@ export const LoginPage = () => {
         <input type="password" id="password" />
       </div>
       <button id="login-btn">Login</button>
+      <p id="haveAccount">
+        No account?! <Link to="/">Sign up</Link>
+      </p>
     </form>
   );
 };

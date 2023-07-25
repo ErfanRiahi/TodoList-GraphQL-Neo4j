@@ -1,7 +1,6 @@
 import { Outlet, Route, Routes } from "react-router-dom";
 import { SignUpPage } from "./pages/SignUpPage/SignUpPage";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
-import { SignUpLogin } from "./pages/SignUp-Login/SignUpLogin";
 import { Tasks } from "./pages/TasksPage/Tasks";
 import { AddTask } from "./pages/AddTask/AddTask";
 import { EditTask } from "./pages/EditTask/EditTask";
@@ -16,7 +15,7 @@ const client = new ApolloClient({
 });
 
 // Layout with Header
-const WithHeaderLayout = ({ children }) => {
+const WithHeaderLayout = () => {
   return (
     <div>
       <Header />
@@ -27,7 +26,7 @@ const WithHeaderLayout = ({ children }) => {
 };
 
 // Layout without Header
-const WithoutHeaderLayout = ({ children }) => {
+const WithoutHeaderLayout = () => {
   return (
     <div>
       <Outlet />
@@ -45,8 +44,7 @@ function App() {
           <Route path="/editTask" element={<EditTask />} />
         </Route>
         <Route element={<WithoutHeaderLayout />}>
-          <Route path="/" element={<SignUpLogin />} />
-          <Route path="/signUp" element={<SignUpPage />} />
+          <Route path="/" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Route>
       </Routes>
