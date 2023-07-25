@@ -11,5 +11,5 @@ type Task {
   title: String!
   description: String
   isCompleted: Boolean!
-  members: [Member!]! @relationship(type: "TODO", direction: IN)
+  member: [Member!]! @relationship(type: "TODO", direction: IN)
 }

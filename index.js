@@ -6,6 +6,10 @@ import neo4j from "neo4j-driver";
 import { Neo4jGraphQL } from "@neo4j/graphql";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
+import express from "express";
+import cors from "cors";
+const app = express();
+app.use(cors());
 
 //  Load graphql type definition from schema.graphql
 const __dirname = dirname("./schema.graphql");
