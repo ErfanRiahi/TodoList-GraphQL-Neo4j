@@ -7,6 +7,7 @@ import { AddTask } from "./pages/AddTask/AddTask";
 import { EditTask } from "./pages/EditTask/EditTask";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
 import { Header } from "./components/Header/Header";
+import { Footer } from "./components/Footer/Footer";
 
 //  apollo client
 const client = new ApolloClient({
@@ -20,6 +21,7 @@ const WithHeaderLayout = ({ children }) => {
     <div>
       <Header />
       <Outlet />
+      <Footer />
     </div>
   );
 };
