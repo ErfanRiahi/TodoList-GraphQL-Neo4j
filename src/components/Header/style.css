@@ -25,12 +25,13 @@ body {
   font-weight: bold;
 }
 
-#header a {
+#logout {
   text-decoration: none;
   color: white;
   transition: color 0.2s;
+  cursor: pointer;
 }
 
-#header a:hover {
+#logout:hover {
   color: orange;
 }

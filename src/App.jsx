@@ -20,7 +20,7 @@ const WithHeaderLayout = () => {
     <div>
       <Header />
       <Outlet />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

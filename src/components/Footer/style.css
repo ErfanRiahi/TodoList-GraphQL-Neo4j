@@ -1,6 +1,7 @@
 #footer {
   position: absolute;
-  top: calc(100vh - 40px);
+  /* top: calc(100vh - 40px); */
+  bottom: 0;
   width: 100%;
 }
 
@@ -22,6 +23,7 @@
   text-decoration: none;
   color: white;
   transition: color 0.2s;
+  font-family: Roboto;
 }
 
 #footer a:hover {

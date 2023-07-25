@@ -1,10 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import "./style.css";
 import { useQuery, gql, useMutation } from "@apollo/client";
 
 const AllTasks = gql`
-  query GetTasks {
-    tasks {
+  query GetTasks($id: ID!) {
+    tasks(where: { member_SOME: { id: $id } }) {
       id
       title
       description
@@ -20,7 +20,10 @@ const DeleteTask = gql`
   }
 `;
 export const Tasks = () => {
-  const { loading, error, data, refetch } = useQuery(AllTasks);
+  const memberId = sessionStorage.getItem("memberId");
+  const { loading, error, data, refetch } = useQuery(AllTasks, {
+    variables: { id: memberId },
+  });
   refetch();
 
   // Use useMutation to get the mutate function.
@@ -43,7 +46,11 @@ export const Tasks = () => {
   };
   return (
     <section>
-      <Link to="/addTask" state={data.tasks.length} id="addTaskLink">
+      <Link
+        to="/addTask"
+        state={[data.tasks.length, memberId]}
+        id="addTaskLink"
+      >
         <button id="addTask">Add task</button>
       </Link>
       {data.tasks.map((task, index) => (
