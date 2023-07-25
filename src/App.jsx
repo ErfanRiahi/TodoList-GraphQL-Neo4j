@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Outlet, Route, Routes } from "react-router-dom";
 import { SignUpPage } from "./pages/SignUpPage/SignUpPage";
 import { LoginPage } from "./pages/LoginPage/LoginPage";
 import { SignUpLogin } from "./pages/SignUp-Login/SignUpLogin";
@@ -6,7 +6,7 @@ import { Tasks } from "./pages/TasksPage/Tasks";
 import { AddTask } from "./pages/AddTask/AddTask";
 import { EditTask } from "./pages/EditTask/EditTask";
 import { ApolloProvider, ApolloClient, InMemoryCache } from "@apollo/client";
-// import {createMemoryHistory} from "history"
+import { Header } from "./components/Header/Header";
 
 //  apollo client
 const client = new ApolloClient({
@@ -14,26 +14,39 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+// Layout with Header
+const WithHeaderLayout = ({ children }) => {
+  return (
+    <div>
+      <Header />
+      <Outlet />
+    </div>
+  );
+};
+
+// Layout without Header
+const WithoutHeaderLayout = ({ children }) => {
+  return (
+    <div>
+      <Outlet />
+    </div>
+  );
+};
+
 function App() {
   return (
-    // <ApolloProvider client={client}>
-    //   <Tasks />
-    // {/* <Route path="/" element={<SignUpLogin />} />
-    //   <Route path="/signUp" element={<SignUpPage />} />
-    //   <Route path="/login" element={<LoginPage />} />
-    //   <Route path="/tasks" element={<Tasks />} />
-    //   <Route path="/addTask" element={<AddTask />} />
-    //   <Route path="/editTask" element={<EditTask />} /> */}
-    // {/* </ApolloProvider> */}
-
     <ApolloProvider client={client}>
       <Routes>
-        <Route path="/" element={<SignUpLogin />} />
-        <Route path="/signUp" element={<SignUpPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/tasks" element={<Tasks />} />
-        <Route path="/addTask" element={<AddTask />} />
-        <Route path="/editTask" element={<EditTask />} />
+        <Route element={<WithHeaderLayout />}>
+          <Route path="/tasks" element={<Tasks />} />
+          <Route path="/addTask" element={<AddTask />} />
+          <Route path="/editTask" element={<EditTask />} />
+        </Route>
+        <Route element={<WithoutHeaderLayout />}>
+          <Route path="/" element={<SignUpLogin />} />
+          <Route path="/signUp" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
       </Routes>
     </ApolloProvider>
   );

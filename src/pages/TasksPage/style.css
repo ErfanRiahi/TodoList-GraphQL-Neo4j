@@ -35,6 +35,10 @@ section {
   background-color: greenyellow;
 }
 
+#addTaskLink {
+  width: fit-content;
+}
+
 .edit-delete {
   display: flex;
   gap: 20px;

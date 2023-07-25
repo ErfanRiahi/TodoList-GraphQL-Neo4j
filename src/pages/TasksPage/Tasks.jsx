@@ -43,7 +43,7 @@ export const Tasks = () => {
   };
   return (
     <section>
-      <Link to="/addTask" state={data.tasks.length}>
+      <Link to="/addTask" state={data.tasks.length} id="addTaskLink">
         <button id="addTask">Add task</button>
       </Link>
       {data.tasks.map((task, index) => (
