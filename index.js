@@ -8,15 +8,9 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import express from "express";
 import cors from "cors";
+import { typeDefs } from "./typeDefs.js";
 const app = express();
 app.use(cors());
-
-//  Load graphql type definition from schema.graphql
-const __dirname = dirname("./schema.graphql");
-const typeDefs = fs.readFileSync(
-  path.join(__dirname, "schema.graphql"),
-  "utf-8"
-);
 
 //  Read authentication data from env file
 const URI = process.env.NEO4J_URI;
