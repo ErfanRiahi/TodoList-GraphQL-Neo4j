@@ -28,3 +28,15 @@
 #login-btn:hover {
   scale: 1.03;
 }
+
+#password {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+#incorrect {
+  margin: 0 auto;
+  font-size: 1rem;
+  margin-top: 20px;
+  color: red;
+}

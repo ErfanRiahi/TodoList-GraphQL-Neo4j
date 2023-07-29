@@ -8,6 +8,7 @@ const GetMember = gql`
     members(where: { email: $email }) {
       id
       name
+      password
     }
   }
 `;
@@ -20,11 +21,16 @@ export const LoginPage = () => {
     email: "",
     password: "",
   });
+  const [isValidate, setIsValidate] = useState(false);
 
   const [getMember, { loading, data }] = useLazyQuery(GetMember, {
     // Define what to do when the query is successful
     onCompleted: (data) => {
       console.log(data);
+      if (data.members[0].password !== info.password) {
+        setIsValidate(true);
+        return;
+      }
       sessionStorage.setItem("username", data.members[0].name);
       sessionStorage.setItem("memberId", data.members[0].id);
 
@@ -52,13 +58,14 @@ export const LoginPage = () => {
           onBlur={(e) => setInfo({ ...info, email: e.target.value })}
         />
       </div>
-      <div>
+      <div id="password">
         <label htmlFor="password">Password: </label>
         <input
           type="password"
           id="password"
           onBlur={(e) => setInfo({ ...info, password: e.target.value })}
         />
+        {isValidate ? <label id="incorrect">Password is incorrect</label> : ""}
       </div>
       <button id="login-btn" onClick={handleLogin}>
         Login
