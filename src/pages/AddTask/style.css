@@ -16,6 +16,10 @@
   justify-content: space-between;
 }
 
+#btnS {
+  display: flex;
+  gap: 10px;
+}
 #addTask-btn {
   width: 100%;
   font-size: 1.2rem;
@@ -32,4 +36,18 @@
 
 #description {
   width: 171px;
+}
+
+#back-btn {
+  width: 100%;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 7px;
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#back-btn:hover {
+  background-color: orange;
 }

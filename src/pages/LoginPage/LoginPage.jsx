@@ -26,7 +26,6 @@ export const LoginPage = () => {
   const [getMember, { loading, data }] = useLazyQuery(GetMember, {
     // Define what to do when the query is successful
     onCompleted: (data) => {
-      console.log(data);
       if (data.members[0].password !== info.password) {
         setIsValidate(true);
         return;

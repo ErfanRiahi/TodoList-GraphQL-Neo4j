@@ -68,9 +68,14 @@ export const AddTask = () => {
           onBlur={(e) => setDesc(e.target.value)}
         />
       </div>
-      <button id="addTask-btn" onClick={handleAdd}>
-        Add task
-      </button>
+      <div id="btnS">
+        <button id="back-btn" onClick={() => navigate("/tasks")}>
+          back
+        </button>
+        <button id="addTask-btn" onClick={handleAdd}>
+          Add task
+        </button>
+      </div>
     </div>
   );
 };

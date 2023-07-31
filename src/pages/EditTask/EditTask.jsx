@@ -88,11 +88,14 @@ export const EditTask = () => {
           onChange={handleChangeDesc}
         ></textarea>
       </div>
-      {/* <Link to="/tasks"> */}
-      <button id="editTask-btn" onClick={handleEdit}>
-        Edit task
-      </button>
-      {/* </Link> */}
+      <div id="btnS">
+        <button id="back-btn" onClick={() => navigate("/tasks")}>
+          back
+        </button>
+        <button id="editTask-btn" onClick={handleEdit}>
+          Edit task
+        </button>
+      </div>
     </div>
   );
 };
