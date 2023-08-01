@@ -21,13 +21,15 @@ export const typeDefs = `#graphql
     }
 
     type Query {
-        allTask: [Task]
+        allTasks: [Task]
     }
 
     type Mutation {
         signup( username: String!, email: String!, password: String!) : AuthPayload
         login(email: String!, password: String!) : AuthPayload
         addTask(title: String!, description: String, userId: ID) : Task
+        deleteTask(taskId: ID!) : Task
+        editTask(taskId: ID!, title: String, description: String, isCompleted: Boolean) : Task
     }
 
 `;

@@ -8,8 +8,29 @@ import { validateUser } from "../components/validateUser.js";
 
 const resolvers = {
   Query: {
-    allTask: async (_, args, { req }) => {
-      console.log(req.headers.token);
+    allTasks: async (_, args, { req }) => {
+      try {
+        const token = req.headers.authorization.split(" ")[1];
+        const userId = validateUser(token);
+
+        const session = neoSchema.driver.session();
+
+        const query = `
+          MATCH (u:User {id: $userId})-[:TODO]->(t:Task)
+          RETURN t
+        `;
+
+        const result = await session.run(query, { userId });
+
+        const tasks = result.records.map(
+          (record) => record.get("t").properties
+        );
+        session.close();
+
+        return tasks;
+      } catch (error) {
+        throw new Error(error);
+      }
     },
   },
   Mutation: {
@@ -69,9 +90,9 @@ const resolvers = {
         const token = req.headers.authorization.split(" ")[1];
         const userId = validateUser(token);
 
+        const session = neoSchema.driver.session();
         const { title, description } = args;
         const id = uuidv4();
-        const session = neoSchema.driver.session();
 
         const query = `
           CREATE (t:Task {id: $id, title: $title, description: $description, isCompleted: false})
@@ -89,6 +110,44 @@ const resolvers = {
         });
         session.close();
         return result.records[0].get("t").properties;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    deleteTask: async (_, args, { req }) => {
+      try {
+        const token = req.headers.authorization.split(" ")[1];
+        validateUser(token);
+
+        const session = neoSchema.driver.session();
+
+        const { taskId } = args;
+        const query = `
+          MATCH (t:Task {id: $taskId})
+          DETACH DELETE t
+        `;
+
+        await session.run(query, { taskId });
+        session.close();
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    editTask: async (_, args, { req }) => {
+      try {
+        const token = req.headers.authorization.split(" ")[1];
+        validateUser(token);
+
+        const { taskId, title, description, isCompleted } = args;
+        const session = neoSchema.driver.session();
+
+        const query = `
+          MATCH (t:Task {id: $taskId})
+          SET t.title = $title, t.description = $description, t.isCompleted = $isCompleted          
+        `;
+
+        await session.run(query, { taskId, title, description, isCompleted });
+        session.close();
       } catch (error) {
         throw new Error(error);
       }
