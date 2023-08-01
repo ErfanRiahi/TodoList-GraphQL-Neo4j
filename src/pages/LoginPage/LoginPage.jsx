@@ -16,14 +16,19 @@ const LOGIN = gql`
 `;
 
 export const LoginPage = () => {
+  //  Clear username and token when login page come up
   sessionStorage.setItem("username", "");
-  sessionStorage.setItem("memberId", "");
+  sessionStorage.setItem("token", "");
 
   const navigate = useNavigate();
+
+  //  Create info variable to store user info
   const [info, setInfo] = useState({
     email: "",
     password: "",
   });
+
+  //  Handle any error about existing email or wrong password
   const [isValidate, setIsValidate] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -40,13 +45,12 @@ export const LoginPage = () => {
         console.log("Mutation successful!", response);
         sessionStorage.setItem("token", response.data.login.token);
         sessionStorage.setItem("username", response.data.login.user.username);
-        setIsValidate(false);
         navigate("/tasks");
       })
       .catch((error) => {
         console.error("Mutation error:", error);
         setIsValidate(true);
-        setErrorMessage(error.toString().slice(13, 38));
+        setErrorMessage(error.toString().slice(13, 38)); // Show error message under password input
       });
   };
   return (

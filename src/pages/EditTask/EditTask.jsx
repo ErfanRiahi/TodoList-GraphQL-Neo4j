@@ -34,7 +34,7 @@ const EditTaskBtn = gql`
 export const EditTask = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const id = location.state;
+  const id = location.state; //  Get the task id that is gonna edit
 
   const { loading, error, data } = useQuery(OneTask, {
     variables: { id },
@@ -45,6 +45,7 @@ export const EditTask = () => {
   const [desc, setDesc] = useState("");
   const handleChangeDesc = (e) => setDesc(e.target.value);
 
+  //  Fill title and description input when data received
   useEffect(() => {
     if (data) {
       setTitle(data.tasks[0].title);

@@ -29,7 +29,7 @@ export const Tasks = () => {
       },
     },
   });
-  refetch();
+  refetch(); // Refetch data when navigating to this page
 
   // Use useMutation to get the mutate function.
   const [deleteTask] = useMutation(DeleteTask);

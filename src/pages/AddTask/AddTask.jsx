@@ -23,6 +23,7 @@ export const AddTask = () => {
   const handleAdd = () => {
     // Call the mutate function here to trigger the mutation.
     addNewTask({
+      //  Fill variables and headers
       variables: { title, desc },
       context: {
         headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },

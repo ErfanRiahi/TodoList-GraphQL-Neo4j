@@ -16,6 +16,7 @@ const AddUser = gql`
 
 export const SignUpPage = () => {
   const navigate = useNavigate();
+
   const [info, setInfo] = useState({
     username: "",
     email: "",
@@ -34,7 +35,7 @@ export const SignUpPage = () => {
     })
       .then((response) => {
         console.log("Mutation successful!", response);
-        // navigate("/tasks");
+        navigate("/tasks");
       })
       .catch((error) => {
         console.error("Mutation error:", error);

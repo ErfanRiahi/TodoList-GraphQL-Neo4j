@@ -6,8 +6,9 @@ export const Header = () => {
   const navigate = useNavigate();
 
   const handleLogOut = () => {
+    //  username and token fill in login page
     sessionStorage.setItem("username", "");
-    sessionStorage.setItem("memberId", "");
+    sessionStorage.setItem("token", "");
     navigate("/login");
   };
   return (
