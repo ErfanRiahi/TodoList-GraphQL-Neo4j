@@ -1,6 +1,22 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { neoSchema } from "./configs/neo4j.config.js";
+import express from "express";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+
+const app = express();
+app.use(cookieParser());
+app.use(cors());
+
+// app.use(
+//   "/",
+//   bodyParser.json(),
+//   graphqlExpress((_, res) => ({
+//     schema,
+//     context: { res },
+//   }))
+// );
 
 //  Create an instance of ApolloServer
 const server = new ApolloServer({
