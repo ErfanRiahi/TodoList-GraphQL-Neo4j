@@ -1,29 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
-import "./style.css";
 import { useState } from "react";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
+import "./style.css";
 
-const AddMember = gql`
-  mutation addMember(
-    $id: ID!
-    $name: String!
-    $email: String!
-    $password: String!
-  ) {
-    createMembers(
-      input: [{ id: $id, name: $name, email: $email, password: $password }]
-    ) {
-      members {
-        name
+const AddUser = gql`
+  mutation ($username: String!, $email: String!, $password: String!) {
+    signup(username: $username, email: $email, password: $password) {
+      token
+      user {
+        username
       }
-    }
-  }
-`;
-
-const AllMember = gql`
-  query {
-    members {
-      name
     }
   }
 `;
@@ -31,30 +17,24 @@ const AllMember = gql`
 export const SignUpPage = () => {
   const navigate = useNavigate();
   const [info, setInfo] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
   });
-  let numberOfMembers = 0;
 
-  const { loading, error, data } = useQuery(AllMember);
-
-  if (data) numberOfMembers = data.members.length;
-
-  const [addNewMember] = useMutation(AddMember);
+  const [addNewUser] = useMutation(AddUser);
   const handleAdd = () => {
     // Call the mutate function here to trigger the mutation.
-    addNewMember({
+    addNewUser({
       variables: {
-        id: numberOfMembers + 1,
-        name: info.name,
+        username: info.username,
         email: info.email,
         password: info.password,
       },
     })
       .then((response) => {
         console.log("Mutation successful!", response);
-        navigate("/tasks");
+        // navigate("/tasks");
       })
       .catch((error) => {
         console.error("Mutation error:", error);
@@ -63,11 +43,11 @@ export const SignUpPage = () => {
   return (
     <div id="signUpForm">
       <div>
-        <label htmlFor="name">Name: </label>
+        <label htmlFor="username">Username: </label>
         <input
           type="text"
-          id="name"
-          onBlur={(e) => setInfo({ ...info, name: e.target.value })}
+          id="username"
+          onBlur={(e) => setInfo({ ...info, username: e.target.value })}
         />
       </div>
       <div>

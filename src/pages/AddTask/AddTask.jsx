@@ -4,23 +4,9 @@ import { gql, useMutation } from "@apollo/client";
 import { useState } from "react";
 
 const AddNewTask = gql`
-  mutation AddTask($id: ID!, $title: String!, $desc: String, $memberId: ID!) {
-    createTasks(
-      input: [
-        {
-          id: $id
-          title: $title
-          description: $desc
-          isCompleted: false
-          member: { connect: { where: { node: { id: $memberId } } } }
-        }
-      ]
-    ) {
-      tasks {
-        id
-        title
-        description
-      }
+  mutation ($title: String!, $desc: String) {
+    addTask(title: $title, description: $desc) {
+      id
     }
   }
 `;
@@ -28,9 +14,6 @@ const AddNewTask = gql`
 export const AddTask = () => {
   const [title, setTitle] = useState();
   const [desc, setDesc] = useState();
-  const location = useLocation();
-  const numberOfTasks = location.state[0];
-  const memberId = location.state[1];
 
   const navigate = useNavigate();
 
@@ -40,11 +23,14 @@ export const AddTask = () => {
   const handleAdd = () => {
     // Call the mutate function here to trigger the mutation.
     addNewTask({
-      variables: { id: numberOfTasks + 1, title, desc, memberId },
+      variables: { title, desc },
+      context: {
+        headers: { Authorization: "Bearer " + sessionStorage.getItem("token") },
+      },
     })
       .then((response) => {
         console.log("Mutation successful!", response);
-        navigate("/tasks", { state: memberId });
+        navigate("/tasks");
       })
       .catch((error) => {
         console.error("Mutation error:", error);

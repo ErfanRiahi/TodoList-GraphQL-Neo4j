@@ -1,14 +1,16 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./style.css";
 import { useState } from "react";
-import { gql, useLazyQuery, useQuery } from "@apollo/client";
+import { gql, useLazyQuery, useMutation, useQuery } from "@apollo/client";
 
-const GetMember = gql`
-  query GetMember($email: String!) {
-    members(where: { email: $email }) {
-      id
-      name
-      password
+const LOGIN = gql`
+  mutation ($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      token
+      user {
+        username
+        id
+      }
     }
   }
 `;
@@ -16,36 +18,35 @@ const GetMember = gql`
 export const LoginPage = () => {
   sessionStorage.setItem("username", "");
   sessionStorage.setItem("memberId", "");
+
   const navigate = useNavigate();
   const [info, setInfo] = useState({
     email: "",
     password: "",
   });
   const [isValidate, setIsValidate] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const [getMember, { loading, data }] = useLazyQuery(GetMember, {
-    // Define what to do when the query is successful
-    onCompleted: (data) => {
-      if (data.members[0].password !== info.password) {
-        setIsValidate(true);
-        return;
-      }
-      sessionStorage.setItem("username", data.members[0].name);
-      sessionStorage.setItem("memberId", data.members[0].id);
-
-      navigate("/tasks");
-      // You can use history.push to redirect the user here after login
-      // For example, history.push("/tasks", { data });
-    },
-    // Define what to do if there's an error with the query
-    onError: (error) => {
-      console.log("Error:", error.message);
-    },
-  });
+  const [checkLogin] = useMutation(LOGIN);
   const handleLogin = () => {
-    getMember({
-      variables: { email: info.email },
-    });
+    // Call the mutate function here to trigger the mutation.
+    checkLogin({
+      variables: {
+        email: info.email,
+        password: info.password,
+      },
+    })
+      .then((response) => {
+        console.log("Mutation successful!", response);
+        sessionStorage.setItem("token", response.data.login.token);
+        setIsValidate(false);
+        navigate("/tasks");
+      })
+      .catch((error) => {
+        console.error("Mutation error:", error);
+        setIsValidate(true);
+        setErrorMessage(error.toString().slice(13, 38));
+      });
   };
   return (
     <div id="loginForm">
@@ -64,7 +65,7 @@ export const LoginPage = () => {
           id="password"
           onBlur={(e) => setInfo({ ...info, password: e.target.value })}
         />
-        {isValidate ? <label id="incorrect">Password is incorrect</label> : ""}
+        {isValidate ? <label id="incorrect">{errorMessage}</label> : ""}
       </div>
       <button id="login-btn" onClick={handleLogin}>
         Login
