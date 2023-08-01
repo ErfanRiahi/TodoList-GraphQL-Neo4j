@@ -10,11 +10,12 @@ const resolvers = {
   Query: {
     allTasks: async (_, args, { req }) => {
       try {
-        const token = req.headers.authorization.split(" ")[1];
-        const userId = validateUser(token);
+        const token = req.headers.authorization.split(" ")[1]; // Get token value from headers
+        const userId = validateUser(token); //  Check the requester is authenticated
 
         const session = neoSchema.driver.session();
 
+        //  Find all tasks that related to authenticated user
         const query = `
           MATCH (u:User {id: $userId})-[:TODO]->(t:Task)
           RETURN t
@@ -46,7 +47,7 @@ const resolvers = {
       if (checkExistUser.records.length !== 0)
         throw new Error("User already exist!");
 
-      const id = uuidv4();
+      const id = uuidv4(); // Create unique id
       const hashedPassword = await hashPassword(password);
       const result = await session.run(
         `CREATE (u:User {id: $id, username: $username, email: $email, password: $hashedPassword}) RETURN u`,
@@ -94,6 +95,7 @@ const resolvers = {
         const { title, description } = args;
         const id = uuidv4();
 
+        //  Create task and make a relation between task and the authenticated user
         const query = `
           CREATE (t:Task {id: $id, title: $title, description: $description, isCompleted: false})
           WITH t

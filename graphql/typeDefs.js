@@ -15,6 +15,7 @@ export const typeDefs = `#graphql
         user: [User!]! @relationship(type: "TODO", direction: IN)
     }
 
+    # Write this query to just return token and user information
     type AuthPayload {
         token: String!
         user: User!
