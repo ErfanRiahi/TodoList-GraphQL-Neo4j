@@ -1,41 +1,51 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./style.css";
 import { useQuery, gql, useMutation } from "@apollo/client";
 
 const AllTasks = gql`
-  query GetTasks($id: ID!) {
-    tasks(where: { member_SOME: { id: $id } }) {
+  query {
+    allTasks {
       id
       title
       description
+      isCompleted
     }
   }
 `;
 
 const DeleteTask = gql`
-  mutation deleteTask($id: ID!) {
-    deleteTasks(where: { id: $id }) {
-      nodesDeleted
+  mutation ($taskId: ID!) {
+    deleteTask(taskId: $taskId) {
+      id
     }
   }
 `;
 export const Tasks = () => {
-  const memberId = sessionStorage.getItem("memberId");
+  const navigate = useNavigate();
   const { loading, error, data, refetch } = useQuery(AllTasks, {
-    variables: { id: memberId },
+    context: {
+      headers: {
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    },
   });
   refetch();
 
   // Use useMutation to get the mutate function.
-  const [addNewTask] = useMutation(DeleteTask);
+  const [deleteTask] = useMutation(DeleteTask);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>Error :(</p>;
 
   const handleDelete = (taskId) => {
     // Call the mutate function here to trigger the mutation.
-    addNewTask({
-      variables: { id: taskId },
+    deleteTask({
+      variables: { taskId },
+      context: {
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      },
     })
       .then((response) => {
         console.log("Mutation successful!", response);
@@ -46,14 +56,11 @@ export const Tasks = () => {
   };
   return (
     <section>
-      <Link
-        to="/addTask"
-        state={[data.tasks.length, memberId]}
-        id="addTaskLink"
-      >
-        <button id="addTask">Add task</button>
-      </Link>
-      {data.tasks.map((task, index) => (
+      <button id="addTask" onClick={() => navigate("/addTask")}>
+        Add task
+      </button>
+
+      {data.allTasks.map((task, index) => (
         <div className="task" key={index}>
           <p className="title">{task.title}</p>
           <span>{task.description}</span>
@@ -61,6 +68,7 @@ export const Tasks = () => {
             <Link to="/editTask" state={task.id}>
               <button className="edit btn">Edit</button>
             </Link>
+
             <button
               className="delete btn"
               onClick={() => handleDelete(task.id)}

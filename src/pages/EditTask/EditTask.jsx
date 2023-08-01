@@ -14,16 +14,19 @@ const OneTask = gql`
 `;
 
 const EditTaskBtn = gql`
-  mutation EditTask($id: ID!, $title: String!, $desc: String) {
-    updateTasks(
-      where: { id: $id }
-      update: { title: $title, description: $desc }
+  mutation (
+    $taskId: ID!
+    $title: String
+    $desc: String
+    $isCompleted: Boolean
+  ) {
+    editTask(
+      taskId: $taskId
+      title: $title
+      description: $desc
+      isCompleted: $isCompleted
     ) {
-      tasks {
-        id
-        title
-        description
-      }
+      id
     }
   }
 `;
@@ -58,7 +61,12 @@ export const EditTask = () => {
   const handleEdit = () => {
     // Call the mutate function here to trigger the mutation.
     editTask({
-      variables: { id: data.tasks[0].id, title, desc },
+      variables: { taskId: id, title, desc, isCompleted: false },
+      context: {
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      },
     })
       .then((response) => {
         console.log("Mutation successful!", response);

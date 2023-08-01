@@ -39,6 +39,7 @@ export const LoginPage = () => {
       .then((response) => {
         console.log("Mutation successful!", response);
         sessionStorage.setItem("token", response.data.login.token);
+        sessionStorage.setItem("username", response.data.login.user.username);
         setIsValidate(false);
         navigate("/tasks");
       })
