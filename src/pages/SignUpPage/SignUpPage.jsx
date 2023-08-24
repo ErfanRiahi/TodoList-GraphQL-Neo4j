@@ -35,7 +35,7 @@ export const SignUpPage = () => {
     })
       .then((response) => {
         console.log("Mutation successful!", response);
-        navigate("/tasks");
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Mutation error:", error);
